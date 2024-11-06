@@ -8,7 +8,68 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
-    </StackPanel>
+    <Grid>
+        <Grid
+            x:Name="AppTitleBar"
+            Height="48"
+            Margin="48,0,0,0"
+            VerticalAlignment="Top"
+            Padding="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Image
+                x:Name="AppFontIcon"
+                Width="16"
+                Height="16"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Source="/Assets/Square44x44Logo.png" />
+            <TextBlock
+                Margin="12,0,0,0"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind GetAppTitleFromSystem()}"/>
+        </Grid>
+
+        <NavigationView
+            x:Name="NavigationViewControl"
+            IsTitleBarAutoPaddingEnabled="False"
+            AlwaysShowHeader="True"
+            Header="Default Header"
+            IsTabStop="False" 
+            BackRequested="NavigationViewControl_BackRequested" 
+            ItemInvoked="NavigationViewControl_ItemInvoked">
+            <NavigationView.HeaderTemplate>
+                <DataTemplate>
+                    <Grid Margin="-20,-20,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid x:Name="pageTitle"
+                            Background="Transparent"
+                            Height="44"
+                            VerticalAlignment="Top">
+                            <TextBlock x:Name="title" 
+                                Style="{StaticResource TitleTextBlockStyle}"
+                                FontSize="24"
+                                VerticalAlignment="Center"
+                                Text="{Binding}"/>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </NavigationView.HeaderTemplate>
+            <NavigationView.MenuItems>
+                <NavigationViewItem Icon="Switch" Content="古典密码" Tag="UWP_Crypto.Pages.OldPage" />
+                <NavigationViewItem Icon="TwoPage" Content="分组密码" Tag="UWP_Crypto.Pages.GroupPage" />
+                <NavigationViewItem Icon="Account" Content="公钥密码" Tag="UWP_Crypto.Pages.PublicPage" />
+                <NavigationViewItem Icon="Page2" Content="杂项" Tag="UWP_Crypto.Pages.MiscPage" />
+            </NavigationView.MenuItems>
+            <Frame x:Name="ContentFrame" Navigated="ContentFrame_Navigated" Padding="35,0,0,0"/>
+        </NavigationView>
+    </Grid>
+
 </Window>
