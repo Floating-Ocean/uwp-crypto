@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -10,6 +11,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using UWP_Crypto.Utils;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -20,9 +22,9 @@ namespace UWP_Crypto.Pages;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class OldPage : Page
+public sealed partial class ClassicPage : Page
 {
-    public OldPage()
+    public ClassicPage()
     {
         InitializeComponent();
     }
@@ -44,12 +46,29 @@ public sealed partial class OldPage : Page
                 IdeType.Visibility = Visibility.Collapsed;
                 ShiftPanel.Visibility = Visibility.Collapsed;
                 AffPanel.Visibility = Visibility.Collapsed;
+                if (InnerType.SelectedIndex == 1)
+                {
+                    VigenerePanel.Visibility = Visibility.Visible;
+                    RailPanel.Visibility = Visibility.Collapsed;
+                }
+                else if (InnerType.SelectedIndex == 2)
+                {
+                    VigenerePanel.Visibility = Visibility.Collapsed;
+                    RailPanel.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    VigenerePanel.Visibility = Visibility.Collapsed;
+                    RailPanel.Visibility = Visibility.Collapsed;
+                }
                 break;
 
             default:
             case "×Ô¶¨Òå":
                 InnerType.Visibility = Visibility.Collapsed;
                 IdeType.Visibility = Visibility.Visible;
+                VigenerePanel.Visibility = Visibility.Collapsed;
+                RailPanel.Visibility = Visibility.Collapsed;
                 if (IdeType.SelectedIndex == 0)
                 {
                     ShiftPanel.Visibility = Visibility.Visible;
@@ -59,7 +78,6 @@ public sealed partial class OldPage : Page
                 {
                     ShiftPanel.Visibility = Visibility.Collapsed;
                     AffPanel.Visibility = Visibility.Visible;
-
                 }
                 break;
         }
@@ -87,5 +105,49 @@ public sealed partial class OldPage : Page
                 AffPanel.Visibility = Visibility.Visible;
                 break;
         }
+    }
+
+    private void InnerType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!IsLoaded)
+        {
+            return;
+        }
+
+        var selected = e.AddedItems[0].ToString();
+
+        switch (selected)
+        {
+            case "Î¬¼ªÄáÑÇÃÜÂë":
+                VigenerePanel.Visibility = Visibility.Visible;
+                RailPanel.Visibility = Visibility.Collapsed;
+                break;
+
+            case "Õ¤À¸ÃÜÂë":
+                VigenerePanel.Visibility = Visibility.Collapsed;
+                RailPanel.Visibility = Visibility.Visible;
+                break;
+
+            default:
+                VigenerePanel.Visibility = Visibility.Collapsed;
+                RailPanel.Visibility = Visibility.Collapsed;
+                break;
+        }
+    }
+
+    private async void Paste_Click(object sender, RoutedEventArgs e)
+    {
+        var clipboard = await QuickTools.GetClipboard(XamlRoot);
+        if (clipboard != null)
+        {
+            InputBox.Document.SetText(TextSetOptions.None, clipboard);
+        }
+    }
+
+    private void Copy_Click(object sender, RoutedEventArgs e)
+    {
+        string output;
+        OutputBox.Document.GetText(TextGetOptions.None, out output);
+        QuickTools.CopyToClipboard(output);
     }
 }

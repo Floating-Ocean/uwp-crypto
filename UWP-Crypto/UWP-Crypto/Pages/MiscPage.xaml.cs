@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -10,6 +11,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using UWP_Crypto.Utils;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -25,5 +27,21 @@ public sealed partial class MiscPage : Page
     public MiscPage()
     {
         this.InitializeComponent();
+    }
+
+    private async void Paste_Click(object sender, RoutedEventArgs e)
+    {
+        var clipboard = await QuickTools.GetClipboard(XamlRoot);
+        if (clipboard != null)
+        {
+            InputBox.Document.SetText(TextSetOptions.None, clipboard);
+        }
+    }
+
+    private void Copy_Click(object sender, RoutedEventArgs e)
+    {
+        string output;
+        OutputBox.Document.GetText(TextGetOptions.None, out output);
+        QuickTools.CopyToClipboard(output);
     }
 }

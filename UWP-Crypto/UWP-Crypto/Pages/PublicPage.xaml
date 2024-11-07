@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <ScrollView>
+    <ScrollViewer>
 
         <StackPanel Orientation="Vertical" Margin="0,0,0,32">
 
@@ -29,47 +29,67 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Orientation="Vertical">
+                <Grid Grid.Column="0">
 
-                    <Grid VerticalAlignment="Center" Margin="0,0,0,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Row="0" VerticalAlignment="Top">
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Text="输入明文或密文" VerticalAlignment="Center"/>
-                        <StackPanel Grid.Column="1"/>
-                        <Button Grid.Column="2" Content="从剪贴板获取"/>
+                        <StackPanel Grid.Column="0"/>
+                        <Button x:Name="Paste" Grid.Column="1" Content="从剪贴板获取" Click="Paste_Click">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel>
+                                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="已粘贴自剪贴板"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
                     </Grid>
 
-                    <TextBox x:Name="InputBox" AutomationProperties.Name="multi-line TextBox"
-                 Height="200" TextWrapping="Wrap" AcceptsReturn="True"/>
+                    <RichEditBox Grid.Row="1" x:Name="InputBox" Height="225" Header="输入明文或密文" VerticalAlignment="Top" Margin="0,8,0,0"/>
 
-                </StackPanel>
+                </Grid>
 
                 <StackPanel Grid.Column="1" Width="16"/>
 
-                <StackPanel Grid.Column="2" Orientation="Vertical">
+                <Grid Grid.Column="2">
 
-                    <Grid VerticalAlignment="Center" Margin="0,0,0,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Row="0" VerticalAlignment="Top">
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Text="加密或解密后的结果" VerticalAlignment="Center"/>
-                        <StackPanel Grid.Column="1"/>
-                        <Button Grid.Column="2" Content="复制到剪贴板"/>
+                        <StackPanel Grid.Column="0"/>
+                        <Button x:Name="Copy" Grid.Column="1" Content="复制到剪贴板" Click="Copy_Click">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel>
+                                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="已复制到剪贴板"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
                     </Grid>
 
-                    <TextBox x:Name="OutputBox" AutomationProperties.Name="multi-line TextBox"
-                 Height="200" TextWrapping="Wrap" AcceptsReturn="True"/>
+                    <RichEditBox Grid.Row="1" x:Name="OutputBox" Height="225" Header="加密或解密后的结果" VerticalAlignment="Top" Margin="0,8,0,0"/>
 
-                </StackPanel>
+                </Grid>
             </Grid>
 
             <StackPanel Orientation="Horizontal" Margin="0,18,0,0">
@@ -95,5 +115,5 @@
 
         </StackPanel>
 
-    </ScrollView>
+    </ScrollViewer>
 </Page>

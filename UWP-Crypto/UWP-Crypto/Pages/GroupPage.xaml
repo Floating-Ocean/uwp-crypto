@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <ScrollView>
+    <ScrollViewer>
 
         <StackPanel Orientation="Vertical" Margin="0,0,0,32">
 
@@ -141,5 +141,5 @@
 
         </StackPanel>
 
-    </ScrollView>
+    </ScrollViewer>
 </Page>

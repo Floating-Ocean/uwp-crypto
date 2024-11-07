@@ -63,7 +63,7 @@
                 </DataTemplate>
             </NavigationView.HeaderTemplate>
             <NavigationView.MenuItems>
-                <NavigationViewItem Icon="Switch" Content="古典密码" Tag="UWP_Crypto.Pages.OldPage" />
+                <NavigationViewItem Icon="Switch" Content="古典密码" Tag="UWP_Crypto.Pages.ClassicPage" />
                 <NavigationViewItem Icon="TwoPage" Content="分组密码" Tag="UWP_Crypto.Pages.GroupPage" />
                 <NavigationViewItem Icon="Account" Content="公钥密码" Tag="UWP_Crypto.Pages.PublicPage" />
                 <NavigationViewItem Icon="Page2" Content="杂项" Tag="UWP_Crypto.Pages.MiscPage" />

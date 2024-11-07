@@ -25,11 +25,11 @@ public sealed partial class MainWindow : Window
 {
     public MainWindow()
     {
-        this.InitializeComponent();
+        InitializeComponent();
 
         NavigationViewControl.SelectedItem = NavigationViewControl.MenuItems.OfType<NavigationViewItem>().First();
         ContentFrame.Navigate(
-                   typeof(Pages.OldPage),
+                   typeof(Pages.ClassicPage),
                    null,
                    new Microsoft.UI.Xaml.Media.Animation.EntranceNavigationTransitionInfo()
                    );
@@ -57,7 +57,7 @@ public sealed partial class MainWindow : Window
         }
         else if (args.InvokedItemContainer != null && (args.InvokedItemContainer.Tag != null))
         {
-            Type newPage = Type.GetType(args.InvokedItemContainer.Tag.ToString());
+            var newPage = Type.GetType(args.InvokedItemContainer.Tag.ToString());
             ContentFrame.Navigate(
                    newPage,
                    null,
@@ -68,7 +68,10 @@ public sealed partial class MainWindow : Window
 
     private void NavigationViewControl_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
     {
-        if (ContentFrame.CanGoBack) ContentFrame.GoBack();
+        if (ContentFrame.CanGoBack)
+        {
+            ContentFrame.GoBack();
+        }
     }
 
     private void ContentFrame_Navigated(object sender, NavigationEventArgs e)

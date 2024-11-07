@@ -165,62 +165,68 @@ public sealed partial class GroupPage : Page
         ChangeEnability(false);
         ProgressAnim.IsActive = true;
 
-        await RunCrypto();
+        var algorithm = GeneralType.SelectedIndex switch
+        {
+            2 => SymmetricHelper.Algorithm.AES,
+            1 => SymmetricHelper.Algorithm.TripleDES,
+            _ => SymmetricHelper.Algorithm.DES,
+        };
+        var key = KeyVal.Text;
+        var iv = IVType.SelectedIndex == 0 ? null : IVVal.Text;
+        var encoding = OutType.SelectedIndex == 0 ? SymmetricHelper.OutEncoding.Base64 : SymmetricHelper.OutEncoding.Hex;
+        var runType = RunType.SelectedIndex;
+
+        await Task.Run(() => RunCrypto(algorithm, key, iv, encoding, runType, input));
 
         ProgressAnim.IsActive = false;
         ChangeEnability(true);
     }
 
-    private async Task RunCrypto()
+    private void RunCrypto(SymmetricHelper.Algorithm alogrithm, string key, string iv, SymmetricHelper.OutEncoding encoding, int runType, string input)
     {
-        var helper = new SymmetricHelper(
-            GeneralType.SelectedIndex switch
-            {
-                2 => SymmetricHelper.Algorithm.AES,
-                1 => SymmetricHelper.Algorithm.TripleDES,
-                _ => SymmetricHelper.Algorithm.DES,
-            },
-            KeyVal.Text,
-            IVType.SelectedIndex == 0 ? null : IVVal.Text,
-            OutType.SelectedIndex == 0 ? SymmetricHelper.OutEncoding.Base64 : SymmetricHelper.OutEncoding.Hex
-        );
-
-        string input;
-        InputBox.Document.GetText(TextGetOptions.None, out input);
+        var helper = new SymmetricHelper(alogrithm, key, iv, encoding);
 
         try
         {
-            if (RunType.SelectedIndex == 0)
+            var result = string.Empty;
+            if (runType == 0)
             {
-                OutputBox.Document.SetText(TextSetOptions.None, helper.Encrypt(input));
+                result = helper.Encrypt(input);
             }
             else
             {
-                OutputBox.Document.SetText(TextSetOptions.None, helper.Decrypt(input));
+                result = helper.Decrypt(input);
             }
+
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+            {
+                OutputBox.Document.SetText(TextSetOptions.None, result);
+            });
         }
         catch (FormatException)
         {
-            await QuickTools.OpenSimpleDialog(XamlRoot, "格式错误", "输入非法，请检查格式并选择正确的编码后重试。");
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+            {
+                await QuickTools.OpenSimpleDialog(XamlRoot, "格式错误", "输入非法，请检查格式并选择正确的编码后重试。");
+            });
             return;
         }
         catch (Exception)
         {
-            await QuickTools.OpenSimpleDialog(XamlRoot, "密钥或IV错误", "操作失败，请检查密钥或IV的正确性后重试。");
+            DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+            {
+                await QuickTools.OpenSimpleDialog(XamlRoot, "密钥或IV错误", "操作失败，请检查密钥或IV的正确性后重试。");
+            });
             return;
         }
     }
 
     private async void Paste_Click(object sender, RoutedEventArgs e)
     {
-        var package = Clipboard.GetContent();
-        if (package.Contains(StandardDataFormats.Text))
+        var clipboard = await QuickTools.GetClipboard(XamlRoot);
+        if (clipboard != null)
         {
-            InputBox.Document.SetText(TextSetOptions.None, await package.GetTextAsync());
-        }
-        else
-        {
-            await QuickTools.OpenSimpleDialog(XamlRoot, "无法粘贴", "剪贴板上不是纯文本信息。");
+            InputBox.Document.SetText(TextSetOptions.None, clipboard);
         }
     }
 
@@ -228,9 +234,6 @@ public sealed partial class GroupPage : Page
     {
         string output;
         OutputBox.Document.GetText(TextGetOptions.None, out output);
-
-        var package = new DataPackage();
-        package.SetText(output);
-        Clipboard.SetContent(package);
+        QuickTools.CopyToClipboard(output);
     }
 }
