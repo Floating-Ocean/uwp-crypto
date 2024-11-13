@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="UWP_Crypto.Pages.PublicKeyPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWP_Crypto.Pages"
+    xmlns:data="using:UWP_Crypto.Data"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
+
+    <Grid Margin="0,0,32,32">
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.ThemeDictionaries>
+                    <ResourceDictionary x:Key="Light">
+                        <StaticResource x:Key="ListBackBrush" ResourceKey="SolidBackgroundFillColorBaseBrush" />
+                        <Thickness x:Key="ListBorderThickness">0</Thickness>
+                    </ResourceDictionary>
+                    <ResourceDictionary x:Key="Dark">
+                        <StaticResource x:Key="ListBackBrush" ResourceKey="SolidBackgroundFillColorBaseBrush" />
+                        <Thickness x:Key="ListBorderThickness">0</Thickness>
+                    </ResourceDictionary>
+                    <ResourceDictionary x:Key="HighContrast">
+                        <SolidColorBrush x:Key="ListBackBrush" Color="{ThemeResource SystemColorWindowColor}" />
+                        <Thickness x:Key="ListBorderThickness">1</Thickness>
+                    </ResourceDictionary>
+                </ResourceDictionary.ThemeDictionaries>
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Margin="0,12" Style="{ThemeResource BodyStrongTextBlockStyle}" Text="已保存的密钥" />
+
+        <RelativePanel Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <ListView Background="{ThemeResource ListBackBrush}" BorderThickness="{ThemeResource ListBorderThickness}"
+                      CornerRadius="8" Padding="2,4" Margin="0,0,0,16"
+                      x:Name="KeyList" SelectionMode="Single" ItemsSource="{x:Bind PublicKeyItems}" SelectionChanged="KeyList_SelectionChanged"
+                      RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
+                      RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="data:PublicKeyItem">
+                        <Grid>
+                            <Grid.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="删除密钥" Click="KeyDelete_Click"/>
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <FontIcon Grid.RowSpan="2" Glyph="&#xEB95;" />
+                            <TextBlock Grid.Column="1" Style="{ThemeResource BaseTextBlockStyle}" Padding="12,12,0,0"
+                               Text="{x:Bind Name}"/>
+                            <TextBlock Grid.Column="1" Grid.Row="1" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Padding="12,0,0,16"
+                               Text="{x:Bind Info}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackPanel x:Name="EmptyPlaceholder" Orientation="Vertical"
+                        RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True"
+                        VerticalAlignment="Center" Visibility="Collapsed">
+                <FontIcon Glyph="&#xF133;" FontSize="32"/>
+                <TextBlock Style="{ThemeResource FlyoutPickerTitleTextBlockStyle}" HorizontalAlignment="Center" Text="Hey，这里什么都没有呢。" Margin="12,16,0,2"/>
+                <TextBlock HorizontalAlignment="Center" Text="点击下方按钮创建或导入密钥吧" Margin="0,8,0,32"/>
+            </StackPanel>
+            <ProgressRing x:Name="ListProgress" Width="48" Height="48"
+                          RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
+                          RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True"/>
+        </RelativePanel>
+        
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <Button x:Name="NewKeyButton" Content="创建新密钥" Click="NewKeyButton_Click"/>
+            <Button x:Name="ImportButton" Content="导入密钥" Margin="6,0,0,0" Click="Import_Click"/>
+            <Button x:Name="ExportButton" Content="导出选定密钥" Margin="6,0,0,0" IsEnabled="False">
+                <Button.Flyout>
+                    <Flyout>
+                        <StackPanel>
+                            <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="导出选项" Margin="0,0,0,12" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="ExportPubButton" Content="导出公钥" Click="ExportPub_Click"/>
+                                <Button x:Name="ExportPrvButton" Content="导出私钥" Click="ExportPrv_Click" Margin="6,0,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            <ProgressRing x:Name="ProgressAnim" IsActive="False" Margin="16,0,0,0" Width="24" Height="24"/>
+        </StackPanel>
+
+    </Grid>
+</Page>

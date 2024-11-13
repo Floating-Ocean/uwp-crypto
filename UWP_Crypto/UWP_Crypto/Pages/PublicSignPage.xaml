@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="UWP_Crypto.Pages.PublicSignPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWP_Crypto.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    NavigationCacheMode="Enabled">
+
+    <ScrollViewer>
+
+        <StackPanel Orientation="Vertical" Margin="0,0,32,32">
+
+            <TextBlock Style="{ThemeResource BodyTextBlockStyle}" Text="密钥" Margin="0,0,0,8" />
+
+            <Button x:Name="ChangeKeyButton" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Padding="12,6,12,4" Click="ChangeKey_Click">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <FontIcon x:Name="KeyIcon" Grid.RowSpan="2" Glyph="&#xE946;" />
+                    <TextBlock x:Name="KeyName" Grid.Column="1" Style="{ThemeResource BaseTextBlockStyle}" Padding="12,4,0,0" Text="未选择密钥"/>
+                    <TextBlock x:Name="KeyInfo" Grid.Column="1" Grid.Row="1" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Padding="12,0,0,8" Text="点击此处选择一个密钥以继续操作"/>
+                    <FontIcon Grid.RowSpan="2" Grid.Column="2" Glyph="&#xE974;" FontSize="12"/>
+                </Grid>
+            </Button>
+
+            <Grid Margin="0,16,0,0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Row="0" VerticalAlignment="Top">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0"/>
+
+                        <Button x:Name="Paste" Grid.Column="1" Content="从剪贴板获取" Click="Paste_Click">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel>
+                                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="已粘贴自剪贴板"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </Grid>
+
+                    <RichEditBox Grid.Row="1" x:Name="InputBox" Height="225" Header="输入明文" VerticalAlignment="Top" Margin="0,8,0,0"/>
+
+                </Grid>
+
+                <StackPanel Grid.Column="1" Width="16"/>
+
+                <Grid Grid.Column="2">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Row="0" VerticalAlignment="Top">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0"/>
+
+                        <Button x:Name="Copy" Grid.Column="1" Content="复制到剪贴板" Click="Copy_Click">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel>
+                                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="已复制到剪贴板"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </Grid>
+
+                    <RichEditBox Grid.Row="1" x:Name="OutputBox" Height="225" Header="签名后的哈希值" VerticalAlignment="Top" Margin="0,8,0,0"/>
+
+                </Grid>
+            </Grid>
+
+            <StackPanel Orientation="Horizontal" Margin="0,18,0,0">
+
+                <ComboBox x:Name="RunType" Header="转换模式" Width="100" SelectedIndex="0" SelectionChanged="RunType_SelectionChanged">
+                    <x:String>签名</x:String>
+                    <x:String>校验</x:String>
+                </ComboBox>
+
+                <ComboBox x:Name="OutType" Header="编码方式" Width="150" SelectedIndex="0" Margin="6,0,0,0">
+                    <x:String>Base64</x:String>
+                    <x:String>Hex</x:String>
+                </ComboBox>
+
+                <TextBlock x:Name="NoPrvKeyInfo" TextWrapping="Wrap" Padding="20,5,0,8" Text="不存在私钥，无法进行签名。" VerticalAlignment="Bottom" Visibility="Collapsed"/>
+
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,18,0,0">
+
+                <Button x:Name="TranformButton" Style="{ThemeResource AccentButtonStyle}" Content="开始转换" Padding="32,5,32,6" Click="Transform_Click"></Button>
+
+                <Button x:Name="ClearButton" Content="清空" Margin="6,0,0,0">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel>
+                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="清空输入内容和输出内容吗？" Margin="0,0,0,12" />
+                                <Button Content="确定" Click="DeleteContent_Click"/>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
+                <ProgressRing x:Name="ProgressAnim" IsActive="False" Margin="16,0,0,0" Width="24" Height="24"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

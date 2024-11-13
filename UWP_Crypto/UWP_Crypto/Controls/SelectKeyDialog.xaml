@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="UWP_Crypto.Controls.SelectKeyDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWP_Crypto.Controls"
+    xmlns:data="using:UWP_Crypto.Data"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Loaded="UserControl_Loaded">
+
+    <RelativePanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <ListView CornerRadius="8" Padding="0,8,0,0" Margin="-12,-8"
+                  x:Name="KeyList" SelectionMode="Single" ItemsSource="{x:Bind PublicKeyItems}"
+                  RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
+                  RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="data:PublicKeyItem">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Grid.RowSpan="2" Glyph="&#xEB95;" />
+                        <TextBlock Grid.Column="1" Style="{ThemeResource BaseTextBlockStyle}" Padding="12,12,0,0"
+                                   Text="{x:Bind Name}"/>
+                        <TextBlock Grid.Column="1" Grid.Row="1" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Padding="12,0,0,16"
+                                   Text="{x:Bind Info}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ProgressRing x:Name="ListProgress" Width="48" Height="48"
+                      RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
+                      RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True"/>
+    </RelativePanel>
+</UserControl>
